@@ -1,7 +1,7 @@
 class Messenger
 
 	def read_from_file
-		filename = ("../test.htm")
+		filename = ("../messages.htm")
 		file = String.new
 	 	#read file
 	 	File.foreach(filename) do |f|
