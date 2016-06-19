@@ -9,26 +9,23 @@ class Messenger
 	 	end
 
 	 	file_divs = file.each_line('<div class="message">')
+	 	first_flag = true
+	 	messages = Array.new
 
 	 	file_divs.each do |div|
-	 		from = between(div, "<span class=\"user\">", "</span>")
-	 		date = between(div, "<span class=\"meta\">", "</span")
-	 		message = between(div, "<p>", "</p>")
-		 	messages << [from, date, message]
+	 		if first_flag 
+	 			first_flag = false
+	 		else			
+		 		puts  "\n++\n" + div + "\n++\n"
+		 		from = between(div, "<span class=\"user\">", "</span><span class=\"meta\">")
+		 		date = between(div, "<span class=\"meta\">", "</span")
+		 		message = between(div, "<p>", "</p>")
+			 	messages << [from, date, message]
+			end
 		end
 
 		write_to_file(messages)
 
-	end
-
-	def write_to_file(messages)
-		open("messenger-results.txt", 'w') do |f|
-			messages.each do |message|
-				line = "hi"
-				#line = message[0] + ", " message[1] + ", " + message[2]
-				f.puts line
-			end
-		end
 	end
 
 	#returns whats between start and finish
@@ -39,9 +36,26 @@ class Messenger
 		#return BC
 		content = line_array[1]
 		# remove C from | BC
-		content = content.chomp(finish)
+		content = content.split(finish)
+
+		if content[0].nil?
+			content[0] = " "
+		end
+
 		#return B
-		content
+		content[0]
+	end
+
+	def write_to_file(messages)
+		open("../messenger-results.txt", 'w') do |f|
+			messages.each do |message|
+				puts "     from: " + message[0]
+				puts "     on: " + message[1]
+				puts "     message: " + message[2] 
+				line = message[0] + ", " + message[1] + ", " + message[2]
+				f.puts line
+			end
+		end
 	end
 end
 
