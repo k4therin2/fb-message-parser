@@ -1,3 +1,5 @@
+require 'date'
+
 class Messenger
 
 	def read_from_file
@@ -15,12 +17,14 @@ class Messenger
 	 	file_divs.each do |div|
 	 		if first_flag 
 	 			first_flag = false
-	 		else			
-		 		puts  "\n++\n" + div + "\n++\n"
+	 		else
+	 			#Debug, don't use for big files lol:			
+		 			#puts  "\n++\n" + div + "\n++\n"
 		 		from = between(div, "<span class=\"user\">", "</span><span class=\"meta\">")
 		 		date = between(div, "<span class=\"meta\">", "</span")
+		 		date_formatted = date_parser(date)
 		 		message = between(div, "<p>", "</p>")
-			 	messages << [from, date, message]
+			 	messages << [from, date_formatted, message]
 			end
 		end
 
@@ -44,6 +48,14 @@ class Messenger
 
 		#return B
 		content[0]
+	end
+
+	def date_parser(date)
+		#Tuesday, October 1, 2013 at 1:20pm PDT
+		format = "%A, %B %e, %Y at %l:%M%P %Z"
+		date = DateTime.strptime(date, format)
+		#remember: to read time, use DateTime.strpTime(x)
+		date_string = String(date)
 	end
 
 	def write_to_file(messages)
